@@ -1,0 +1,59 @@
+﻿@model Celular
+
+<style>
+    form {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    p {
+        margin-top: 15px;
+        font-size: 16px;
+    }
+
+    .botoes {
+        margin-top: 20px;
+    }
+
+        .botoes button,
+        .botoes a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .botoes button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+            .botoes button:hover {
+                background-color: #a71d2a;
+            }
+
+        .botoes a {
+            background-color: #6c757d;
+            color: white;
+        }
+
+            .botoes a:hover {
+                background-color: #545b62;
+            }
+</style>
+
+<h2>Confirmar Exclusão</h2>
+
+<p>Tem certeza que deseja excluir o celular <strong>@Model.Marca @Model.Modelo</strong> (Preço: <strong>R$ @Model.Preco.ToString("F2")</strong>)?</p>
+
+<form method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="botoes">
+        <button type="submit">Excluir</button>
+        <a href="/Celular/Index">Cancelar</a>
+    </div>
+</form>

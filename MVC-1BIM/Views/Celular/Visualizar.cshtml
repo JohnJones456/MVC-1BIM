@@ -1,0 +1,53 @@
+﻿@model Celular
+
+<style>
+    .detalhes {
+        padding: 15px;
+        margin: 10px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        max-width: 500px;
+    }
+
+        .detalhes p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .detalhes strong {
+            color: #333;
+        }
+
+    .botoes {
+        margin-top: 20px;
+    }
+
+        .botoes a {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+            .botoes a:hover {
+                background-color: #a71d2a;
+            }
+</style>
+
+<h2>Detalhes do Celular</h2>
+
+<div class="detalhes">
+    <p><strong>ID:</strong> @Model.Id</p>
+    <p><strong>Marca:</strong> @Model.Marca</p>
+    <p><strong>Modelo:</strong> @Model.Modelo</p>
+    <p><strong>Preço:</strong> R$ @Model.Preco.ToString("F2")</p>
+    <p><strong>Data de Fabricação:</strong> @Model.DataFabricacao.ToShortDateString()</p>
+</div>
+
+<div class="botoes">
+    <a href="/Celular/Index">Voltar</a>
+</div>

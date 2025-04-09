@@ -1,0 +1,125 @@
+﻿@model List<Evento>
+
+@{
+    ViewData["Title"] = "Lista de Eventos";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<style>
+    form {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 5px;
+        margin-top: 5px;
+        box-sizing: border-box;
+    }
+
+    .botoes {
+        margin-top: 15px;
+    }
+
+        .botoes button,
+        .botoes a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #ffc107;
+            color: black;
+        }
+
+            .botoes button:hover,
+            .botoes a:hover {
+                background-color: #e0a800;
+            }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    #content-wrapper {
+        padding: 20px;
+    }
+
+        #content-wrapper a {
+            display: inline-block;
+            margin: 10px 10px 20px 0;
+            padding: 8px 16px;
+            background-color: #ffc107;
+            color: black;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+            #content-wrapper a:hover {
+                background-color: #e0a800;
+            }
+</style>
+
+<div id="content-wrapper">
+    <a href="/Evento/Cadastrar">Cadastrar Novo</a>
+    <a href="/Evento/GerarPdf">📄 Gerar PDF</a>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Local</th>
+            <th>Preço</th>
+            <th>Data</th>
+            <th>Ações</th>
+        </tr>
+        @foreach (var evento in Model)
+        {
+            <tr>
+                <td>@evento.Id</td>
+                <td>@evento.Nome</td>
+                <td>@evento.Local</td>
+                <td>R$ @evento.Preco.ToString("F2")</td>
+                <td>@evento.Data.ToShortDateString()</td>
+                <td>
+                    <a href="/Evento/Visualizar/@evento.Id">Ver</a> |
+                    <a href="/Evento/Editar/@evento.Id">Editar</a> |
+                    <a href="/Evento/Excluir/@evento.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

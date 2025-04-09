@@ -1,0 +1,77 @@
+﻿@model Celular
+
+<style>
+    form {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 5px;
+        margin-top: 5px;
+        box-sizing: border-box;
+    }
+
+    .botoes {
+        margin-top: 15px;
+    }
+
+        .botoes button,
+        .botoes a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .botoes button {
+            background-color: #007bff;
+            color: white;
+        }
+
+            .botoes button:hover {
+                background-color: #0056b3;
+            }
+
+        .botoes a {
+            background-color: #dc3545;
+            color: white;
+        }
+
+            .botoes a:hover {
+                background-color: #a71d2a;
+            }
+</style>
+
+<h2>Cadastrar Celular</h2>
+
+<form method="post">
+    <label>Marca:</label>
+    <input type="text" name="Marca" required />
+
+    <label>Modelo:</label>
+    <input type="text" name="Modelo" required />
+
+    <label>Preço:</label>
+    <input type="number" name="Preco" step="0.01" required />
+
+    <label>Data de Fabricação:</label>
+    <input type="date" name="DataFabricacao" required />
+
+    <div class="botoes">
+        <button type="submit">Salvar</button>
+        <a href="@Url.Action("Index", "Celular")">Voltar</a>
+    </div>
+</form>

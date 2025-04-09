@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .btn-custom {
+        border-color: #343a40;
+        color: #343a40;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn-custom:hover {
+            background-color: #e0a800; 
+            border-color: #e0a800;
+            color: #212529; 
+        }
+</style>
+
+<div class="text-center mt-5">
+    <h1 class="display-4 mb-3">MVC ASP .NET</h1>
+    <p class="lead mb-4">Acesse as funcionalidades do sistema abaixo:</p>
+
+    <div class="d-grid gap-3 col-6 mx-auto">
+        <a class="btn btn-custom btn-lg" asp-controller="Aluno" asp-action="Index">Alunos</a>
+        <a class="btn btn-custom btn-lg" asp-controller="Carro" asp-action="Index">Carros</a>
+        <a class="btn btn-custom btn-lg" asp-controller="Celular" asp-action="Index">Celulares</a>
+        <a class="btn btn-custom btn-lg" asp-controller="Evento" asp-action="Index">Eventos</a>
+    </div>
+</div>
