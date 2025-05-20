@@ -93,33 +93,74 @@
             }
 </style>
 
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
 <div id="content-wrapper">
     <a href="/Carro/Cadastrar">Cadastrar Novo</a>
     <a href="/Carro/GerarPdf">📄 Gerar PDF</a>
+    <a href="/Carro/GerarExcel">📄 Gerar Excel</a>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Placa</th>
-            <th>Data de Fabricação</th>
-            <th>Ações</th>
-        </tr>
-        @foreach (var carro in Model)
-        {
-            <tr>
-                <td>@carro.Id</td>
-                <td>@carro.Marca</td>
-                <td>@carro.Modelo</td>
-                <td>@carro.Placa</td>
-                <td>@carro.DataFabricacao.ToShortDateString()</td>
-                <td>
-                    <a href="/Carro/Visualizar/@carro.Id">Ver</a> |
-                    <a href="/Carro/Editar/@carro.Id">Editar</a> |
-                    <a href="/Carro/Excluir/@carro.Id">Excluir</a>
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="table-responsive">
+        <table id="tabelaCarros" class="table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Placa</th>
+                    <th>Data de Fabricação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var carro in Model)
+                {
+                    <tr>
+                        <td>@carro.Id</td>
+                        <td>@carro.Marca</td>
+                        <td>@carro.Modelo</td>
+                        <td>@carro.Placa</td>
+                        <td>@carro.DataFabricacao.ToShortDateString()</td>
+                        <td>
+                            <a href="/Carro/Visualizar/@carro.Id">Ver</a> |
+                            <a href="/Carro/Editar/@carro.Id">Editar</a> |
+                            <a href="/Carro/Excluir/@carro.Id">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabelaCarros').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/Portuguese.json",
+                "search": "Pesquisar:",
+                "searchPlaceholder": "Digite sua busca aqui...",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            },
+            "lengthMenu": [10, 25, 50, 100],
+            "pageLength": 10,
+            "responsive": true
+        });
+
+        $('.dataTables_filter input').attr('placeholder', 'Digite sua busca aqui...');
+    });
+</script>
+

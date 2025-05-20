@@ -5,6 +5,7 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+
 <style>
     form {
         padding: 10px;
@@ -39,13 +40,13 @@
             text-decoration: none;
             font-size: 14px;
             cursor: pointer;
-            background-color: #ffc107; /* amarelo escuro */
+            background-color: #ffc107;
             color: black;
         }
 
             .botoes button:hover,
             .botoes a:hover {
-                background-color: #e0a800; /* amarelo mais escuro */
+                background-color: #e0a800;
             }
 
     table {
@@ -90,36 +91,75 @@
             #content-wrapper a:hover {
                 background-color: #e0a800;
             }
-
 </style>
+
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 
 <div id="content-wrapper">
     <a href="/Aluno/Cadastrar">Cadastrar Novo</a>
     <a href="/Aluno/GerarPdf">📄 Gerar PDF</a>
+    <a href="/Aluno/GerarExcel">📄 Gerar Excel</a>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>RA</th>
-            <th>Email</th>
-            <th>Nascimento</th>
-            <th>Ações</th>
-        </tr>
-        @foreach (var aluno in Model)
-        {
-            <tr>
-                <td>@aluno.Id</td>
-                <td>@aluno.Nome</td>
-                <td>@aluno.RA</td>
-                <td>@aluno.Email</td>
-                <td>@aluno.DataNascimento.ToShortDateString()</td>
-                <td>
-                    <a href="/Aluno/Visualizar/@aluno.Id">Ver</a> |
-                    <a href="/Aluno/Editar/@aluno.Id">Editar</a> |
-                    <a href="/Aluno/Excluir/@aluno.Id">Excluir</a>
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="table-responsive">
+        <table id="tabelaAlunos" class="table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>RA</th>
+                    <th>Email</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var aluno in Model)
+                {
+                    <tr>
+                        <td>@aluno.Id</td>
+                        <td>@aluno.Nome</td>
+                        <td>@aluno.RA</td>
+                        <td>@aluno.Email</td>
+                        <td>@aluno.DataNascimento.ToShortDateString()</td>
+                        <td>
+                            <a href="/Aluno/Visualizar/@aluno.Id">Ver</a> |
+                            <a href="/Aluno/Editar/@aluno.Id">Editar</a> |
+                            <a href="/Aluno/Excluir/@aluno.Id">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabelaAlunos').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/Portuguese.json",
+                "search": "Pesquisar:",
+                "searchPlaceholder": "Digite sua busca aqui...",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            },
+            "lengthMenu": [10, 25, 50, 100],
+            "pageLength": 10,
+            "responsive": true
+        });
+
+        $('.dataTables_filter input').attr('placeholder', 'Digite sua busca aqui...');
+    });
+</script>

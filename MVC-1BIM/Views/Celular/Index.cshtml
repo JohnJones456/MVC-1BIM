@@ -18,6 +18,7 @@
     }
 
     input[type="text"],
+    input[type="email"],
     input[type="date"],
     input[type="number"] {
         width: 100%;
@@ -93,33 +94,73 @@
             }
 </style>
 
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
 <div id="content-wrapper">
     <a href="/Celular/Cadastrar">Cadastrar Novo</a>
     <a href="/Celular/GerarPdf">📄 Gerar PDF</a>
+    <a href="/Celular/GerarExcel">📄 Gerar Excel</a>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Preço</th>
-            <th>Data de Fabricação</th>
-            <th>Ações</th>
-        </tr>
-        @foreach (var celular in Model)
-        {
-            <tr>
-                <td>@celular.Id</td>
-                <td>@celular.Marca</td>
-                <td>@celular.Modelo</td>
-                <td>R$ @celular.Preco.ToString("F2")</td>
-                <td>@celular.DataFabricacao.ToShortDateString()</td>
-                <td>
-                    <a href="/Celular/Visualizar/@celular.Id">Ver</a> |
-                    <a href="/Celular/Editar/@celular.Id">Editar</a> |
-                    <a href="/Celular/Excluir/@celular.Id">Excluir</a>
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="table-responsive">
+        <table id="tabelaCelulares" class="table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Preço (R$)</th>
+                    <th>Data de Fabricação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var celular in Model)
+                {
+                    <tr>
+                        <td>@celular.Id</td>
+                        <td>@celular.Marca</td>
+                        <td>@celular.Modelo</td>
+                        <td>@celular.Preco.ToString("C")</td> <!-- Formata como moeda -->
+                        <td>@celular.DataFabricacao.ToShortDateString()</td>
+                        <td>
+                            <a href="/Celular/Visualizar/@celular.Id">Ver</a> |
+                            <a href="/Celular/Editar/@celular.Id">Editar</a> |
+                            <a href="/Celular/Excluir/@celular.Id">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabelaCelulares').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/Portuguese.json",
+                "search": "Pesquisar:",
+                "searchPlaceholder": "Digite sua busca aqui...",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            },
+            "lengthMenu": [10, 25, 50, 100],
+            "pageLength": 10,
+            "responsive": true
+        });
+
+        $('.dataTables_filter input').attr('placeholder', 'Digite sua busca aqui...');
+    });
+</script>

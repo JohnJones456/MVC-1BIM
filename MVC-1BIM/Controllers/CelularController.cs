@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using MVC_1BIM.Models;
 using System;
 
+using ClosedXML.Excel;
+
 namespace MVC_1BIM.Controllers
 {
     public class CelularController : Controller
@@ -104,5 +106,61 @@ namespace MVC_1BIM.Controllers
 
             return File(stream.ToArray(), "application/pdf", "celulares.pdf");
         }
+
+        public IActionResult GerarExcel()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Celulares");
+
+                // Cabeçalho
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "Marca";
+                worksheet.Cell(1, 3).Value = "Modelo";
+                worksheet.Cell(1, 4).Value = "Preço";
+                worksheet.Cell(1, 5).Value = "Data de Fabricação";
+
+                // Estilo do cabeçalho
+                var headerRange = worksheet.Range(1, 1, 1, 5);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.LightBlue;
+                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                headerRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                // Preenchimento dos dados
+                int linha = 2;
+                foreach (var celular in celulares)
+                {
+                    worksheet.Cell(linha, 1).Value = celular.Id;
+                    worksheet.Cell(linha, 2).Value = celular.Marca;
+                    worksheet.Cell(linha, 3).Value = celular.Modelo;
+                    worksheet.Cell(linha, 4).Value = celular.Preco;
+                    worksheet.Cell(linha, 5).Value = celular.DataFabricacao.ToString("dd/MM/yyyy");
+                    linha++;
+                }
+
+                worksheet.Columns().AdjustToContents();
+
+                // Alinhamento específico para colunas
+                worksheet.Column(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                worksheet.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                // Bordas para os dados
+                var dataRange = worksheet.Range(1, 1, linha - 1, 5);
+                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                // Exportar
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaDeCelulares.xlsx");
+                }
+            }
+        }
+
     }
 }

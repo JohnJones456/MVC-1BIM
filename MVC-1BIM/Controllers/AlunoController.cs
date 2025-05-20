@@ -10,6 +10,8 @@ using System.Linq;
 using System.Collections.Generic;
 using MVC_1BIM.Models;
 
+using ClosedXML.Excel;
+
 namespace MVC_1BIM.Controllers
 {
     public class AlunoController : Controller
@@ -108,6 +110,54 @@ namespace MVC_1BIM.Controllers
 
             return File(stream.ToArray(), "application/pdf", "alunos.pdf");
         }
+
+        public IActionResult GerarExcel()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Alunos");
+
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "Nome";
+                worksheet.Cell(1, 3).Value = "RA";
+                worksheet.Cell(1, 4).Value = "Data de Nascimento";
+
+                var headerRange = worksheet.Range(1, 1, 1, 4);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.LightBlue;
+                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                headerRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                int linha = 2;
+                foreach (var aluno in alunos)
+                {
+                    worksheet.Cell(linha, 1).Value = aluno.Id;
+                    worksheet.Cell(linha, 2).Value = aluno.Nome;
+                    worksheet.Cell(linha, 3).Value = aluno.RA;
+                    worksheet.Cell(linha, 4).Value = aluno.DataNascimento.ToString("dd/MM/yyyy");
+                    linha++;
+                }
+
+                worksheet.Columns().AdjustToContents();
+
+                worksheet.Column(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                var dataRange = worksheet.Range(1, 1, linha - 1, 4);
+                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaDeAlunos.xlsx");
+                }
+            }
+        }
+
 
     }
 }

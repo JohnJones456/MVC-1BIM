@@ -18,6 +18,7 @@
     }
 
     input[type="text"],
+    input[type="email"],
     input[type="date"],
     input[type="number"] {
         width: 100%;
@@ -93,33 +94,73 @@
             }
 </style>
 
+<link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+
 <div id="content-wrapper">
     <a href="/Evento/Cadastrar">Cadastrar Novo</a>
     <a href="/Evento/GerarPdf">📄 Gerar PDF</a>
+    <a href="/Evento/GerarExcel">📄 Gerar Excel</a>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Local</th>
-            <th>Preço</th>
-            <th>Data</th>
-            <th>Ações</th>
-        </tr>
-        @foreach (var evento in Model)
-        {
-            <tr>
-                <td>@evento.Id</td>
-                <td>@evento.Nome</td>
-                <td>@evento.Local</td>
-                <td>R$ @evento.Preco.ToString("F2")</td>
-                <td>@evento.Data.ToShortDateString()</td>
-                <td>
-                    <a href="/Evento/Visualizar/@evento.Id">Ver</a> |
-                    <a href="/Evento/Editar/@evento.Id">Editar</a> |
-                    <a href="/Evento/Excluir/@evento.Id">Excluir</a>
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="table-responsive">
+        <table id="tabelaEventos" class="table-custom">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Local</th>
+                    <th>Preço (R$)</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evento in Model)
+                {
+                    <tr>
+                        <td>@evento.Id</td>
+                        <td>@evento.Nome</td>
+                        <td>@evento.Local</td>
+                        <td>@evento.Preco.ToString("C")</td>
+                        <td>@evento.Data.ToShortDateString()</td>
+                        <td>
+                            <a href="/Evento/Visualizar/@evento.Id">Ver</a> |
+                            <a href="/Evento/Editar/@evento.Id">Editar</a> |
+                            <a href="/Evento/Excluir/@evento.Id">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabelaEventos').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/Portuguese.json",
+                "search": "Pesquisar:",
+                "searchPlaceholder": "Digite sua busca aqui...",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            },
+            "lengthMenu": [10, 25, 50, 100],
+            "pageLength": 10,
+            "responsive": true
+        });
+
+        $('.dataTables_filter input').attr('placeholder', 'Digite sua busca aqui...');
+    });
+</script>

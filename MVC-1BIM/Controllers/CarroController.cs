@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using MVC_1BIM.Models;
 using System;
 
+using ClosedXML.Excel;
+
 namespace MVC_1BIM.Controllers
 {
     public class CarroController : Controller
@@ -104,5 +106,61 @@ namespace MVC_1BIM.Controllers
 
             return File(stream.ToArray(), "application/pdf", "carros.pdf");
         }
+
+        public IActionResult GerarExcel()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Carros");
+
+                // Cabeçalho
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "Marca";
+                worksheet.Cell(1, 3).Value = "Modelo";
+                worksheet.Cell(1, 4).Value = "Placa";
+                worksheet.Cell(1, 5).Value = "Data de Fabricação";
+
+                // Estilo do cabeçalho
+                var headerRange = worksheet.Range(1, 1, 1, 5);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.LightBlue;
+                headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                headerRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                headerRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                // Dados
+                int linha = 2;
+                foreach (var carro in carros)
+                {
+                    worksheet.Cell(linha, 1).Value = carro.Id;
+                    worksheet.Cell(linha, 2).Value = carro.Marca;
+                    worksheet.Cell(linha, 3).Value = carro.Modelo;
+                    worksheet.Cell(linha, 4).Value = carro.Placa;
+                    worksheet.Cell(linha, 5).Value = carro.DataFabricacao.ToString("dd/MM/yyyy");
+                    linha++;
+                }
+
+                worksheet.Columns().AdjustToContents();
+
+                // Alinhamento das colunas
+                worksheet.Column(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                worksheet.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                // Bordas para os dados
+                var dataRange = worksheet.Range(1, 1, linha - 1, 5);
+                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                // Exporta como arquivo
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaDeCarros.xlsx");
+                }
+            }
+        }
+
     }
 }
